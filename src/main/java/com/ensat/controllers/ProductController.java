@@ -2,12 +2,12 @@ package com.ensat.controllers;
 
 import com.ensat.entities.Product;
 import com.ensat.services.ProductService;
+import com.ensat.services.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Product controller.
@@ -89,6 +89,12 @@ public class ProductController {
     public String delete(@PathVariable Integer id) {
         productService.deleteProduct(id);
         return "redirect:/products";
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    void handle(ProductServiceImpl.ProductNotFoundException e) {
+
     }
 
 }

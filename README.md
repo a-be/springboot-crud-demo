@@ -1,37 +1,34 @@
-# springboot-crud-demo
+# Product-demo
+A demo application to create edit and delete products.
+It's possible to create products by sending a message to an ActiveMQ queue
 
-Spring Boot CRUD demo is demonstrating how to implement simple CRUD operations with a `Product` entity.
-
-## What's inside 
-This project is based on the [Spring Boot](http://projects.spring.io/spring-boot/) project and uses these packages :
-- Maven
-- Spring Core
-- Spring Data (Hibernate & MySQL)
-- Spring MVC (Tomcat)
-- [Thymleaf](https://thymeleaf.org)
-
-![demo](https://cl.ly/sEGH/Screen%20Recording%202018-06-11%20at%2010.34%20AM.gif)
-
-## Installation 
-The project is created with Maven, so you just need to import it to your IDE and build the project to resolve the dependencies
-
-## Database configuration 
-Create a MySQL database with the name `springbootdb` and add the credentials to `/resources/application.properties`.  
-The default ones are :
-
+## Start MySQL
 ```
-spring.datasource.url=jdbc:mysql://localhost:3306/springbootdb
-spring.datasource.username=root
-spring.datasource.password=
-spring.jpa.hibernate.ddl-auto=update
+docker run -d --name mysql_database -e MYSQL_USER=user -e MYSQL_PASSWORD=pass -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=db -p 3306:3306 centos/mysql-57-centos7
 ```
 
-## Usage 
-Run the project through the IDE and head out to [http://localhost:8080](http://localhost:8080)
-
-or 
-
-run this command in the command line:
+## Start ActiveMQ
 ```
-mvn spring-boot:run
+docker run --name='activemq' -d -p 61616:61616 -p 8161:8161 webcenter/activemq:latest
+```
+## Start the application
+```
+mvn clean install
+java -jar target/spring-boot-web-0.0.2-SNAPSHOT.jar
+```
+Browse to [http://localhost:8080](http://localhost:8080)
+
+## ActiveMq Console
+
+Browse to [send to queue](http://localhost:8161/admin/send.jsp?JMSDestination=product.queue&JMSDestinationType=queue)
+user: admin
+password: admin
+
+Send a product example :
+```
+{
+"productId": "coffee-1",
+"name": "coffee",
+"price": 10.5
+}
 ```
